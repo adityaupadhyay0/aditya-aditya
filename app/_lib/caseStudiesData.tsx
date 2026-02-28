@@ -4,6 +4,7 @@ import LuxuryClienteling from '../case-studies/luxury-clienteling';
 import MarketPlaceCaseStudy from '../case-studies/market-place';
 import LivingMachine from '../case-studies/living-machine';
 import DTCCaseStudy from '../case-studies/dtc';
+import SillageCaseStudy from '../case-studies/sillage';
 
 export interface CaseStudy {
   id: string;
@@ -65,6 +66,19 @@ export const caseStudiesData: CaseStudy[] = [
       { metric: 'Interaction', value: 'Deep' },
     ],
     content: <LivingMachine />
+  },
+
+  {
+    id: 'sillage',
+    category: 'Case Study · Fine Fragrance / DTC',
+    title: 'SILLAGE — No. 3 Before Rain',
+    description:
+      'A full-surface fragrance PDP that operationalizes Authority, Persona, Presence, Layering, and Ghost-level post-purchase intelligence.',
+    metrics: [
+      { metric: 'Cart Abandonment', value: '68% → Design Target' },
+      { metric: 'Experience Depth', value: '23 Components' },
+    ],
+    content: <SillageCaseStudy />
   },
   {
     id: 'dtc',
