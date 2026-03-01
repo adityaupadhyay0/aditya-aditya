@@ -4,6 +4,7 @@ import LuxuryClienteling from '../case-studies/luxury-clienteling';
 import MarketPlaceCaseStudy from '../case-studies/market-place';
 import LivingMachine from '../case-studies/living-machine';
 import DTCCaseStudy from '../case-studies/dtc';
+import SillageCaseStudy from '../case-studies/sillage';
 
 export interface CaseStudy {
   id: string;
@@ -77,5 +78,17 @@ export const caseStudiesData: CaseStudy[] = [
       { metric: 'LTV', value: '↑ 2.8×' },
     ],
     content: <DTCCaseStudy />
+  },
+  {
+    id: 'sillage',
+    category: 'Vertical · Fine Fragrance',
+    title: 'Sillage, Paris',
+    description:
+      'A full implementation of a high-authority DTC fragrance experience. Where sensory language meets passive persona detection.',
+    metrics: [
+      { metric: 'Conversion', value: '↑ 3.4×' },
+      { metric: 'AOV', value: '£210' },
+    ],
+    content: <SillageCaseStudy />
   },
 ];
