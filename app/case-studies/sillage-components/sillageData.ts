@@ -40,6 +40,14 @@ export interface FragranceDNA {
   };
   mood_tags: string[];
   persona_match: string[];
+  art_elements: {
+    texture: string;
+    pattern: string;
+    color_palette: string[];
+    sound_texture: string;
+    immersion_image?: string;
+    accords: { label: string; value: number; color?: string }[];
+  };
   layering_affinity: { id: string; mood: string }[];
   wear_guide: {
     application_points: string[];
@@ -143,6 +151,19 @@ export const SILLAGE_PRODUCTS: Record<string, FragranceDNA> = {
     },
     "mood_tags": ["contemplative", "elegant", "autumn", "London", "Sunday morning"],
     "persona_match": ["the_collector", "the_romantic"],
+    "art_elements": {
+      "texture": "Grainy, cool stone and soft mist.",
+      "pattern": "A rhythmic, expanding pulse of circular ripples.",
+      "color_palette": ["#e8d5a3", "#d4e8f0", "#c4956a", "#9ea87a", "#5c3d2e"],
+      "sound_texture": "Low-frequency rain on slate, distant thunder.",
+      "accords": [
+        { "label": "Electric", "value": 85, "color": "#d4e8f0" },
+        { "label": "Powdery", "value": 65, "color": "#c4956a" },
+        { "label": "Grounded", "value": 90, "color": "#5c3d2e" },
+        { "label": "Verdant", "value": 45, "color": "#9ea87a" },
+        { "label": "Mineral", "value": 75, "color": "#e8d5a3" }
+      ]
+    },
     "layering_affinity": [
       { "id": "no1-cedar-smoke", "mood": "Evening authority" },
       { "id": "no7-white-suede", "mood": "Weekend softness" }
@@ -183,6 +204,17 @@ export const SILLAGE_PRODUCTS: Record<string, FragranceDNA> = {
     },
     "mood_tags": ["authoritative", "dry", "winter", "evening"],
     "persona_match": ["the_collector"],
+    "art_elements": {
+      "texture": "Rough-hewn wood and dry charcoal.",
+      "pattern": "Vertical, jagged lines of rising smoke.",
+      "color_palette": ["#2a2a2a", "#8b5e3c", "#1a1a1a"],
+      "sound_texture": "Crackling embers and heavy wind.",
+      "accords": [
+        { "label": "Woody", "value": 95, "color": "#8b5e3c" },
+        { "label": "Smoky", "value": 80, "color": "#1a1a1a" },
+        { "label": "Spicy", "value": 60, "color": "#2a2a2a" }
+      ]
+    },
     "layering_affinity": [],
     "wear_guide": {
         "application_points": ["Pulse points"],
@@ -216,6 +248,17 @@ export const SILLAGE_PRODUCTS: Record<string, FragranceDNA> = {
     },
     "mood_tags": ["soft", "intimate", "weekend", "morning"],
     "persona_match": ["the_romantic", "the_explorer"],
+    "art_elements": {
+      "texture": "Velvety suede and warm skin.",
+      "pattern": "Soft, overlapping curves of translucent silk.",
+      "color_palette": ["#f8f8f8", "#d2b48c", "#c19a6b"],
+      "sound_texture": "Soft whispers and the rustle of fabric.",
+      "accords": [
+        { "label": "Musky", "value": 90, "color": "#f8f8f8" },
+        { "label": "Leather", "value": 70, "color": "#d2b48c" },
+        { "label": "Creamy", "value": 85, "color": "#c19a6b" }
+      ]
+    },
     "layering_affinity": [],
     "wear_guide": {
         "application_points": ["Chest", "Neck"],
