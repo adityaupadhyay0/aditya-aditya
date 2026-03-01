@@ -16,6 +16,7 @@ export const SillageAudioProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const ambientOscRef = useRef<OscillatorNode | null>(null);
   const ambientGainRef = useRef<GainNode | null>(null);
+  const filterRef = useRef<BiquadFilterNode | null>(null);
 
   const initAudio = () => {
     if (!audioCtxRef.current) {
@@ -29,27 +30,33 @@ export const SillageAudioProvider: React.FC<{ children: React.ReactNode }> = ({ 
     // Low, steady drone for "Atmosphere"
     const osc = audioCtxRef.current.createOscillator();
     const gain = audioCtxRef.current.createGain();
+    const filter = audioCtxRef.current.createBiquadFilter();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(55, audioCtxRef.current.currentTime); // Low A
+    osc.frequency.setValueAtTime(40, audioCtxRef.current.currentTime); // Deep Paris Atmosphere
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(200, audioCtxRef.current.currentTime);
 
     gain.gain.setValueAtTime(0, audioCtxRef.current.currentTime);
-    gain.gain.linearRampToValueAtTime(0.05, audioCtxRef.current.currentTime + 4);
+    gain.gain.linearRampToValueAtTime(0.08, audioCtxRef.current.currentTime + 4);
 
-    osc.connect(gain);
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(audioCtxRef.current.destination);
 
     osc.start();
     ambientOscRef.current = osc;
     ambientGainRef.current = gain;
+    filterRef.current = filter;
 
-    // Add a second harmonic for richness
+    // Harmonic for elegance
     const osc2 = audioCtxRef.current.createOscillator();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(110, audioCtxRef.current.currentTime);
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(80, audioCtxRef.current.currentTime);
     const gain2 = audioCtxRef.current.createGain();
     gain2.gain.setValueAtTime(0, audioCtxRef.current.currentTime);
-    gain2.gain.linearRampToValueAtTime(0.02, audioCtxRef.current.currentTime + 6);
+    gain2.gain.linearRampToValueAtTime(0.03, audioCtxRef.current.currentTime + 6);
     osc2.connect(gain2);
     gain2.connect(audioCtxRef.current.destination);
     osc2.start();
@@ -57,10 +64,12 @@ export const SillageAudioProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   const stopAmbient = () => {
     if (ambientGainRef.current && audioCtxRef.current) {
-      ambientGainRef.current.gain.linearRampToValueAtTime(0, audioCtxRef.current.currentTime + 1);
+      ambientGainRef.current.gain.linearRampToValueAtTime(0, audioCtxRef.current.currentTime + 1.5);
+      const ctx = audioCtxRef.current;
       setTimeout(() => {
         ambientOscRef.current?.stop();
-      }, 1000);
+        ctx.suspend();
+      }, 1500);
     }
   };
 
@@ -81,20 +90,22 @@ export const SillageAudioProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const playNotePing = (freq: number) => {
     if (!isPlaying || !audioCtxRef.current) return;
 
+    const now = audioCtxRef.current.currentTime;
     const osc = audioCtxRef.current.createOscillator();
     const gain = audioCtxRef.current.createGain();
 
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(freq, audioCtxRef.current.currentTime);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, now);
 
-    gain.gain.setValueAtTime(0.1, audioCtxRef.current.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtxRef.current.currentTime + 1.5);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.15, now + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
 
     osc.connect(gain);
     gain.connect(audioCtxRef.current.destination);
 
     osc.start();
-    osc.stop(audioCtxRef.current.currentTime + 1.5);
+    osc.stop(now + 2.5);
   };
 
   const playCtaSound = () => {
@@ -105,17 +116,17 @@ export const SillageAudioProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const gain = audioCtxRef.current.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(220, now);
-    osc.frequency.exponentialRampToValueAtTime(440, now + 0.1);
+    osc.frequency.setValueAtTime(110, now);
+    osc.frequency.exponentialRampToValueAtTime(220, now + 0.2);
 
-    gain.gain.setValueAtTime(0.1, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 3);
 
     osc.connect(gain);
     gain.connect(audioCtxRef.current.destination);
 
     osc.start();
-    osc.stop(now + 2);
+    osc.stop(now + 3);
   };
 
   return (

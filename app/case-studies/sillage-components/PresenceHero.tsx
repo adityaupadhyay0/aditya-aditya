@@ -28,7 +28,7 @@ export const PresenceHero: React.FC<PresenceHeroProps> = ({ product }) => {
     switch (variant) {
       case 'A':
         return (
-          <div className="flex flex-col items-center text-center max-w-6xl px-8">
+          <div className="flex flex-col items-center text-center max-w-6xl px-8 scale-[0.8]">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -58,7 +58,7 @@ export const PresenceHero: React.FC<PresenceHeroProps> = ({ product }) => {
         );
       case 'B':
         return (
-          <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-[1600px] px-16 gap-32">
+          <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-[1600px] px-16 gap-32 scale-[0.85]">
             <div className="flex-1 space-y-16">
               <motion.div
                  initial={{ opacity: 0, x: -60 }}
@@ -123,10 +123,10 @@ export const PresenceHero: React.FC<PresenceHeroProps> = ({ product }) => {
       case 'D':
       default:
         return (
-          <div className="flex flex-col items-center text-center px-12 relative">
+          <div className="flex flex-col items-center text-center px-12 relative scale-[0.75]">
             <motion.span
               initial={{ opacity: 0, letterSpacing: '2em' }}
-              animate={{ opacity: 1, letterSpacing: '1em' }}
+              animate={{ opacity: 1, letterSpacing: '1.2em' }}
               transition={{ duration: 2.5 }}
               className="font-mono text-[0.8rem] uppercase text-[#b5893a] mb-20"
             >
@@ -154,7 +154,7 @@ export const PresenceHero: React.FC<PresenceHeroProps> = ({ product }) => {
   };
 
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#f2ece0]">
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#fdfaf5]">
        {/* Atmospheric Fluid SVG Background */}
        <div className="absolute inset-0 pointer-events-none z-0">
           <svg className="w-full h-full opacity-[0.05]" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
@@ -162,7 +162,7 @@ export const PresenceHero: React.FC<PresenceHeroProps> = ({ product }) => {
                 <feTurbulence type="fractalNoise" baseFrequency="0.005" numOctaves="2" seed="1" />
                 <feDisplacementMap in="SourceGraphic" scale="100" />
              </filter>
-             <circle cx="500" cy="500" r="400" fill="#b5893a" filter="url(#fluid)">
+             <circle cx="500" cy="500" r="400" fill="#c29f6b" filter="url(#fluid)">
                 <animate attributeName="cx" values="400;600;400" dur="20s" repeatCount="indefinite" />
                 <animate attributeName="cy" values="400;600;400" dur="25s" repeatCount="indefinite" />
              </circle>
@@ -180,7 +180,7 @@ export const PresenceHero: React.FC<PresenceHeroProps> = ({ product }) => {
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="font-serif italic text-3xl tracking-[0.4em] text-[#1c1713]"
+            className="font-serif italic text-3xl tracking-[0.4em] text-[#0d0d0d]"
           >
             SILLAGE
           </motion.span>

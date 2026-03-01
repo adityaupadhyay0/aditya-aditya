@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSillage } from './SillageContext';
 import { useSillageAudio } from './SillageAudio';
 
 export const ScentLab: React.FC = () => {
   const [molecules, setMolecules] = useState<{ id: number, x: number, y: number, color: string, freq: number, type: string }[]>([]);
+  const [ambientColor, setAmbientColor] = useState('#fdfaf5');
   const { logEvent } = useSillage();
   const { playNotePing } = useSillageAudio();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,10 +18,10 @@ export const ScentLab: React.FC = () => {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-    const types = ['Iris', 'Vetiver', 'Rain', 'Smoke'];
+    const types = ['Orris', 'Vetiver', 'Aldehydes', 'Ambrette'];
     const type = types[Math.floor(Math.random() * types.length)];
-    const colors = ['#c4956a', '#5c3d2e', '#e8d5a3', '#1c1713'];
-    const freqs = [330, 220, 440, 110];
+    const colors = ['#c4956a', '#5c3d2e', '#d4e8f0', '#7a4f35'];
+    const freqs = [329.63, 220.00, 440.00, 164.81]; // E4, A3, A4, E3
     const index = types.indexOf(type);
 
     const newMolecule = {
@@ -31,69 +32,82 @@ export const ScentLab: React.FC = () => {
       type
     };
 
-    setMolecules(prev => [...prev, newMolecule].slice(-8));
+    setMolecules(prev => [...prev, newMolecule].slice(-12));
+    setAmbientColor(colors[index]);
     playNotePing(newMolecule.freq);
     logEvent('lab_synthesis', { type });
   };
 
   return (
-    <section className="py-64 px-12 bg-white relative overflow-hidden min-h-screen flex flex-col items-center">
-       <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
+    <section
+       className="py-64 px-12 relative overflow-hidden min-h-screen flex flex-col items-center transition-colors duration-1000"
+       style={{ backgroundColor: `${ambientColor}11` }}
+    >
+       <div className="absolute inset-0 pointer-events-none opacity-[0.02]">
           <svg width="100%" height="100%">
              <filter id="labNoise">
-                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="4" />
              </filter>
              <rect width="100%" height="100%" filter="url(#labNoise)" />
           </svg>
        </div>
 
-       <div className="max-w-4xl text-center space-y-12 mb-32 relative z-10">
-          <span className="font-mono text-[0.8rem] uppercase tracking-[0.8em] text-[#b5893a]">The Synthesis Lab</span>
-          <h2 className="text-7xl md:text-9xl font-light italic text-[#1c1713] tracking-tighter">Play with the Sillage.</h2>
-          <p className="font-serif italic text-2xl text-[#1c1713]/40">Click the canvas to release scent molecules. Mix your own frequency.</p>
+       <div className="max-w-6xl text-center space-y-12 mb-32 relative z-10">
+          <div className="space-y-4">
+             <span className="font-mono text-[0.8rem] uppercase tracking-[1em] text-[#c29f6b]">L'Atelier de Synthèse</span>
+             <p className="font-mono text-[0.6rem] uppercase tracking-widest text-[#0d0d0d]/30">Paris · 75001</p>
+          </div>
+          <h2 className="text-8xl md:text-[12rem] font-light italic text-[#0d0d0d] tracking-tighter leading-none">The Lab.</h2>
+          <p className="font-serif italic text-3xl text-[#0d0d0d]/40 max-w-4xl mx-auto">Touch the void to release molecules. Bathe the atmosphere in your selection.</p>
        </div>
 
        <div
           ref={containerRef}
           onClick={addMolecule}
-          className="relative w-full max-w-6xl aspect-video border border-[#1c1713]/5 bg-[#f2ece0]/30 backdrop-blur-sm cursor-crosshair overflow-hidden shadow-inner"
+          className="relative w-full max-w-7xl aspect-[21/9] border border-[#0d0d0d]/5 bg-white/40 backdrop-blur-2xl cursor-crosshair overflow-hidden shadow-[0_100px_200px_rgba(0,0,0,0.02)]"
        >
+          {/* Paris Architecture Subtle Line */}
+          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#c29f6b]/20 to-transparent" />
+
           <AnimatePresence>
              {molecules.map((m) => (
                <motion.div
                   key={m.id}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{
-                     scale: [1, 2, 0],
-                     opacity: [0.8, 0.4, 0],
-                     x: [`${m.x}%`, `${m.x + (Math.random() - 0.5) * 20}%`],
-                     y: [`${m.y}%`, `${m.y - 40}%`]
+                     scale: [1, 4, 0],
+                     opacity: [0.6, 0.2, 0],
+                     x: [`${m.x}%`, `${m.x + (Math.random() - 0.5) * 40}%`],
+                     y: [`${m.y}%`, `${m.y - 60}%`]
                   }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 4, ease: "easeOut" }}
-                  className="absolute w-24 h-24 rounded-full blur-[40px] pointer-events-none"
-                  style={{ backgroundColor: m.color, left: 0, top: 0 }}
+                  transition={{ duration: 6, ease: "easeOut" }}
+                  className="absolute w-32 h-32 rounded-full blur-[60px] pointer-events-none"
+                  style={{ backgroundColor: m.color, left: 0, top: 0, transform: 'translate(-50%, -50%)' }}
                />
              ))}
           </AnimatePresence>
 
-          <div className="absolute bottom-8 right-8 text-right font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#1c1713]/30">
+          <div className="absolute top-12 left-12 flex flex-col gap-2 font-mono text-[0.55rem] uppercase tracking-[0.4em] text-[#0d0d0d]/20">
+             <span>Protocol: Sillage_v2.2</span>
+             <span>Environment: Isolated</span>
+          </div>
+
+          <div className="absolute bottom-12 right-12 text-right font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#c29f6b]">
              <p>Live Synthesis Engine</p>
-             <p>Active Molecules: {molecules.length}</p>
+             <p className="text-[#0d0d0d]/20 mt-2">Active Components: {molecules.length}</p>
           </div>
        </div>
 
-       <div className="mt-32 flex gap-24">
-          {['Opening', 'Heart', 'Base'].map((phase, i) => (
-             <div key={phase} className="flex flex-col items-center gap-4">
-                <div className="w-1 h-12 bg-[#b5893a]/20 relative">
-                   <motion.div
-                      animate={{ height: ['0%', '100%', '0%'] }}
-                      transition={{ duration: 3 + i, repeat: Infinity }}
-                      className="absolute top-0 left-0 w-full bg-[#b5893a]"
-                   />
-                </div>
-                <span className="font-mono text-[0.6rem] uppercase tracking-widest text-[#1c1713]/40">{phase}</span>
+       <div className="mt-48 grid grid-cols-2 md:grid-cols-4 gap-24">
+          {[
+            { label: 'IRIS ROOT', color: '#c4956a' },
+            { label: 'VETIVER BOURBON', color: '#5c3d2e' },
+            { label: 'ALDEHYDES', color: '#d4e8f0' },
+            { label: 'AMBRETTE SEED', color: '#7a4f35' }
+          ].map((ing, i) => (
+             <div key={ing.label} className="flex flex-col items-center gap-6 group">
+                <div className="w-1.5 h-1.5 rounded-full transition-all duration-700 group-hover:scale-[3]" style={{ backgroundColor: ing.color }} />
+                <span className="font-mono text-[0.6rem] uppercase tracking-[0.5em] text-[#0d0d0d]/40 group-hover:text-[#0d0d0d] transition-colors">{ing.label}</span>
              </div>
           ))}
        </div>

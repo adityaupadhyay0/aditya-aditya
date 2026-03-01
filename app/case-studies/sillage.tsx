@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { SillageProvider, useSillage } from './sillage-components/SillageContext';
 import { SillageAudioProvider, useSillageAudio } from './sillage-components/SillageAudio';
 import { PresenceHero } from './sillage-components/PresenceHero';
@@ -16,6 +16,7 @@ import { IntelligencePanel } from './sillage-components/IntelligencePanel';
 import { SoundToggle } from './sillage-components/SoundToggle';
 import { ConfirmationPage } from './sillage-components/ConfirmationPage';
 import { ScentLab } from './sillage-components/ScentLab';
+import { StageGraph } from './sillage-components/StageGraph';
 import { SILLAGE_PRODUCTS } from './sillage-components/sillageData';
 import { Cormorant_Garamond, DM_Mono } from 'next/font/google';
 
@@ -51,15 +52,15 @@ const SillageContent = () => {
 
   if (orderConfirmed) {
     return (
-      <div className={`${cormorant.variable} ${dmMono.variable} font-serif bg-[#f2ece0] text-[#1c1713]`}>
+      <div className={`${cormorant.variable} ${dmMono.variable} font-serif bg-[#fdfaf5] text-[#0d0d0d]`}>
         <ConfirmationPage />
       </div>
     );
   }
 
   return (
-    <div className={`${cormorant.variable} ${dmMono.variable} font-serif bg-[#f2ece0] text-[#1c1713] selection:bg-[#b5893a]/20 selection:text-[#1c1713] antialiased`}>
-      <div className="fixed inset-0 pointer-events-none z-[999] opacity-[0.04] mix-blend-multiply overflow-hidden">
+    <div className={`${cormorant.variable} ${dmMono.variable} font-serif bg-[#fdfaf5] text-[#0d0d0d] selection:bg-[#c29f6b]/20 selection:text-[#0d0d0d] antialiased`}>
+      <div className="fixed inset-0 pointer-events-none z-[999] opacity-[0.03] mix-blend-multiply overflow-hidden">
         <svg width="100%" height="100%">
           <filter id="grain">
             <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
@@ -69,7 +70,7 @@ const SillageContent = () => {
       </div>
 
       <motion.div
-        className="fixed top-0 left-0 right-0 z-[100] h-[3px] origin-left bg-[#b5893a]"
+        className="fixed top-0 left-0 right-0 z-[100] h-[2px] origin-left bg-[#c29f6b]"
         style={{ scaleX }}
       />
 
@@ -79,21 +80,35 @@ const SillageContent = () => {
       <PresenceHero product={product} />
 
       <div ref={containerRef}>
-        <section className="py-[30vh] px-12 flex flex-col items-center border-b border-[#1c1713]/5 bg-white/20">
+        <section className="py-[40vh] px-12 flex flex-col items-center bg-white/30 border-b border-[#0d0d0d]/5">
            <motion.div
              initial={{ opacity: 0 }}
              whileInView={{ opacity: 1 }}
              viewport={{ once: true }}
-             transition={{ duration: 2 }}
-             className="max-w-6xl text-center space-y-24"
+             transition={{ duration: 2.5 }}
+             className="max-w-[1400px] text-center space-y-32 scale-[0.9]"
            >
-              <div className="space-y-6">
-                <span className="font-mono text-[0.8rem] uppercase tracking-[1em] text-[#b5893a]">Part I: The Wound</span>
-                <div className="h-px w-24 bg-[#b5893a]/30 mx-auto" />
+              <div className="space-y-8">
+                <span className="font-mono text-[0.8rem] uppercase tracking-[1em] text-[#c29f6b]">L'Origine du Parfum</span>
+                <div className="h-px w-32 bg-[#c29f6b]/30 mx-auto" />
               </div>
-              <h2 className="text-8xl md:text-[14rem] font-light italic leading-[0.9] text-balance tracking-tighter">
-                "Fragrance is invisible. It cannot be sampled through a screen."
+              <h2 className="text-9xl md:text-[16rem] font-light italic leading-[0.85] text-balance tracking-tighter">
+                "L'invisible devient palpable."
               </h2>
+              <div className="space-y-16">
+                <p className="font-serif italic text-4xl md:text-6xl text-[#0d0d0d]/40 leading-tight max-w-[1200px] mx-auto">
+                   The customer who lands on a HexaDON experience does not feel sold to. They feel found.
+                </p>
+                <div className="flex justify-center pt-24">
+                   <StageGraph accords={[
+                      { label: 'ELECTRIC', value: 85 },
+                      { label: 'POWDERY', value: 65 },
+                      { label: 'GROUNDED', value: 90 },
+                      { label: 'VERDANT', value: 45 },
+                      { label: 'MINERAL', value: 75 }
+                   ]} />
+                </div>
+              </div>
            </motion.div>
         </section>
 
@@ -103,13 +118,13 @@ const SillageContent = () => {
 
         <StoryArcScroll product={product} />
 
-        <section className="py-64 flex flex-col items-center gap-64 border-t border-[#1c1713]/5 bg-white/40 backdrop-blur-sm">
+        <section className="py-96 flex flex-col items-center gap-64 border-t border-[#0d0d0d]/5 bg-white/40 backdrop-blur-sm">
            <ArtCraftToggle product={product} />
 
            <div className="flex flex-col items-center gap-24">
-              <div className="text-center space-y-6">
-                <span className="font-mono text-[0.8rem] uppercase tracking-[0.6em] text-[#b5893a]">Pillar 02 — Persona</span>
-                <h3 className="font-serif italic text-4xl text-[#1c1713]/40">Align your frequency.</h3>
+              <div className="text-center space-y-8">
+                <span className="font-mono text-[0.8rem] uppercase tracking-[0.6em] text-[#c29f6b]">La Personnalité</span>
+                <h3 className="font-serif italic text-5xl text-[#0d0d0d]/40">Align your frequency.</h3>
               </div>
               <CTAButton />
            </div>
@@ -117,59 +132,59 @@ const SillageContent = () => {
 
         <LayeringBuilder />
 
-        <section className="py-64 px-12 flex flex-col items-center border-t border-[#1c1713]/5 bg-[#f2ece0] relative">
-            <div className="max-w-6xl w-full text-center space-y-32">
-               <div className="space-y-8">
-                  <span className="font-mono text-[0.8rem] uppercase tracking-[0.8em] text-[#b5893a]">Pillar 05 — Insights</span>
-                  <h2 className="text-9xl md:text-[14rem] font-light italic leading-tight tracking-tighter">Collective Intel.</h2>
+        <section className="py-96 px-12 flex flex-col items-center border-t border-[#0d0d0d]/5 bg-[#fdfaf5] relative">
+            <div className="max-w-7xl w-full text-center space-y-48">
+               <div className="space-y-12">
+                  <span className="font-mono text-[0.8rem] uppercase tracking-[1em] text-[#c29f6b]">L'Intelligence Collective</span>
+                  <h2 className="text-9xl md:text-[18rem] font-light italic leading-tight tracking-tighter">HexaDON Log.</h2>
                </div>
                <div className="flex justify-center">
                   <IntelligencePanel />
                </div>
             </div>
 
-            <div className="mt-48">
+            <div className="mt-64">
                <button
                  onClick={() => setOrderConfirmed(true)}
-                 className="group flex flex-col items-center gap-6 font-mono text-[0.7rem] uppercase tracking-[0.5em] text-[#1c1713]/20 hover:text-[#b5893a] transition-all duration-1000"
+                 className="group flex flex-col items-center gap-8 font-mono text-[0.8rem] uppercase tracking-[0.5em] text-[#0d0d0d]/20 hover:text-[#c29f6b] transition-all duration-1000"
                >
                   <span>[ Secure the Sillage ]</span>
-                  <div className="w-24 h-px bg-[#1c1713]/10 group-hover:w-48 group-hover:bg-[#b5893a]/30 transition-all duration-1000" />
+                  <div className="w-32 h-px bg-[#0d0d0d]/10 group-hover:w-64 group-hover:bg-[#c29f6b]/30 transition-all duration-1000" />
                </button>
             </div>
         </section>
       </div>
 
-      <footer className="py-48 px-24 border-t border-[#1c1713]/5 bg-white/60 flex flex-col md:flex-row justify-between items-end gap-24 font-mono text-[0.8rem] uppercase tracking-[0.6em] text-[#1c1713]/40">
-        <div className="space-y-12">
-           <div className="flex items-center gap-12">
-              <span className="italic tracking-[0.4em] font-serif text-3xl text-[#1c1713]">SILLAGE</span>
-              <span className="w-px h-12 bg-[#1c1713]/10 hidden md:block" />
-              <div className="space-y-2">
-                 <p className="text-[0.6rem]">High-Authority Infrastructure</p>
-                 <p className="text-[0.6rem]">By Aditya & Aditya</p>
+      <footer className="py-64 px-24 border-t border-[#0d0d0d]/5 bg-white/60 flex flex-col md:flex-row justify-between items-end gap-32 font-mono text-[0.8rem] uppercase tracking-[0.6em] text-[#0d0d0d]/40">
+        <div className="space-y-16">
+           <div className="flex items-center gap-16">
+              <span className="italic tracking-[0.4em] font-serif text-4xl text-[#0d0d0d]">SILLAGE</span>
+              <span className="w-px h-16 bg-[#0d0d0d]/10 hidden md:block" />
+              <div className="space-y-4">
+                 <p className="text-[0.7rem]">High-Authority Infrastructure</p>
+                 <p className="text-[0.7rem]">Paris · Grasse · New York</p>
               </div>
            </div>
-           <p className="text-[0.5rem] tracking-widest leading-loose max-w-sm opacity-60">
-              The customer who lands on a HexaDON experience does not feel sold to. They feel found.
+           <p className="text-[0.6rem] tracking-widest leading-loose max-w-md opacity-60">
+              A HexaDON × DTC Fragrance Experience. Optimized for conversion, engineered for desire.
            </p>
         </div>
 
-        <div className="flex flex-col md:items-end gap-16">
+        <div className="flex flex-col md:items-end gap-24">
            <SoundToggle onToggle={toggleSound} active={isPlaying} />
-           <div className="flex items-center gap-12">
-              <span className="hover:text-[#b5893a] transition-colors cursor-pointer border-b border-transparent hover:border-[#b5893a]/30 pb-1">Archive</span>
-              <span className="hover:text-[#b5893a] transition-colors cursor-pointer border-b border-transparent hover:border-[#b5893a]/30 pb-1">Philosophy</span>
+           <div className="flex items-center gap-16">
+              <span className="hover:text-[#c29f6b] transition-colors cursor-pointer border-b border-transparent hover:border-[#c29f6b]/30 pb-1">Archive</span>
+              <span className="hover:text-[#c29f6b] transition-colors cursor-pointer border-b border-transparent hover:border-[#c29f6b]/30 pb-1">Manifesto</span>
            </div>
         </div>
       </footer>
 
       <style jsx global>{`
         :root {
-          --sillage-bg: #f2ece0;
-          --sillage-ink: #1c1713;
-          --sillage-gold: #b5893a;
-          --sillage-gold-dim: #8a6e44;
+          --sillage-bg: #fdfaf5;
+          --sillage-ink: #0d0d0d;
+          --sillage-gold: #c29f6b;
+          --sillage-gold-dim: #a68b5a;
           --font-display: var(--font-cormorant);
           --font-mono: var(--font-dm-mono);
         }
@@ -177,15 +192,16 @@ const SillageContent = () => {
         body {
           background-color: var(--sillage-bg);
           color: var(--sillage-ink);
+          overflow-x: hidden;
         }
 
         .font-display { font-family: var(--font-display); }
         .font-mono { font-family: var(--font-mono); }
 
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: var(--sillage-bg); }
-        ::-webkit-scrollbar-thumb { background: #b5893a22; }
-        ::-webkit-scrollbar-thumb:hover { background: #b5893a44; }
+        ::-webkit-scrollbar-thumb { background: #c29f6b22; }
+        ::-webkit-scrollbar-thumb:hover { background: #c29f6b44; }
       `}</style>
     </div>
   );
