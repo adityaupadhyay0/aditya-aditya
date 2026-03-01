@@ -22,27 +22,32 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
   });
 
   const [currentChapterLabel, setCurrentChapterLabel] = useState("I");
-
-  const chapters = [
-    { id: 'opening', data: product.story_arc.opening, number: 'I', range: [0, 0.33] },
-    { id: 'evolution', data: product.story_arc.evolution, number: 'II', range: [0.33, 0.66] },
-    { id: 'signature', data: product.story_arc.signature, number: 'III', range: [0.66, 1] }
-  ];
-
   const chapterValue = useTransform(smoothProgress, [0, 0.33, 0.66, 1], ["I", "I", "II", "III"]);
 
   useMotionValueEvent(chapterValue, "change", (latest) => {
     setCurrentChapterLabel(latest);
   });
 
+  const chapters = [
+    { id: 'opening', data: product.story_arc.opening, number: 'I', range: [0, 0.33], color: product.notes.top[0].color },
+    { id: 'evolution', data: product.story_arc.evolution, number: 'II', range: [0.33, 0.66], color: product.notes.heart[0].color },
+    { id: 'signature', data: product.story_arc.signature, number: 'III', range: [0.66, 1], color: product.notes.base[0].color }
+  ];
+
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-[#f2ece0]">
+    <div ref={containerRef} className="relative h-[600vh] bg-[#f2ece0]">
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
-        {/* Decorative Background Elements */}
+        {/* Dynamic Atmospheric Gradient */}
         <motion.div
-           style={{ rotate: useTransform(smoothProgress, [0, 1], [0, 45]) }}
-           className="absolute w-[150%] h-[150%] border border-[#b5893a]/5 rounded-full pointer-events-none"
+           className="absolute inset-0 pointer-events-none opacity-20 blur-[150px]"
+           style={{
+             background: useTransform(
+               smoothProgress,
+               [0, 0.5, 1],
+               [chapters[0].color, chapters[1].color, chapters[2].color]
+             )
+           }}
         />
 
         <AnimatePresence>
@@ -55,12 +60,16 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
           ))}
         </AnimatePresence>
 
-        {/* Floating Page Number */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
-           <div className="h-12 w-px bg-[#b5893a]/20" />
-           <span className="font-mono text-[0.6rem] uppercase tracking-[0.5em] text-[#b5893a]">
-              Chapter {currentChapterLabel}
-           </span>
+        {/* Cinematic Scrubber */}
+        <div className="absolute left-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-12 z-50">
+           <div className="font-mono text-[0.6rem] uppercase tracking-[0.6em] rotate-90 text-[#b5893a]/40 mb-12">Narrative</div>
+           <div className="h-64 w-px bg-[#1c1713]/10 relative">
+              <motion.div
+                 className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 border border-[#b5893a] bg-[#f2ece0] rounded-full"
+                 style={{ y: useTransform(smoothProgress, [0, 1], [0, 256]) }}
+              />
+           </div>
+           <div className="font-mono text-[0.8rem] text-[#b5893a] pt-4">{currentChapterLabel}</div>
         </div>
       </div>
     </div>
@@ -68,12 +77,19 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
 };
 
 const ChapterView = ({ chapter, progress }: { chapter: any, progress: any }) => {
-  const opacity = useTransform(
+  const isActive = useTransform(
     progress,
     [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
     [0, 1, 0]
   );
-  const y = useTransform(
+
+  const scale = useTransform(
+    progress,
+    [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
+    [1.1, 1, 0.9]
+  );
+
+  const x = useTransform(
     progress,
     [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
     [100, 0, -100]
@@ -81,30 +97,34 @@ const ChapterView = ({ chapter, progress }: { chapter: any, progress: any }) => 
 
   return (
     <motion.div
-      style={{ opacity, y }}
-      className="absolute inset-0 flex items-center justify-center p-8"
+      style={{ opacity: isActive, scale, x }}
+      className="absolute inset-0 flex items-center justify-center p-24"
     >
-      <div className="max-w-4xl w-full text-center space-y-12">
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.03 }}
-          className="absolute inset-0 flex items-center justify-center font-display text-[40vw] font-bold text-[#1c1713] pointer-events-none select-none"
-        >
-          {chapter.number}
-        </motion.span>
+      <div className="max-w-[1400px] w-full grid grid-cols-1 lg:grid-cols-12 gap-24 items-center">
 
-        <div className="relative z-10 space-y-12">
+        <div className="lg:col-span-2 hidden lg:block">
+           <motion.span
+             className="font-display italic text-[14rem] text-[#1c1713]/[0.02] leading-none select-none"
+           >
+             {chapter.number}
+           </motion.span>
+        </div>
+
+        <div className="lg:col-span-8 text-center space-y-16">
           <motion.h3
-            className="text-5xl md:text-8xl font-light text-[#1c1713] italic leading-tight"
+            className="text-7xl md:text-[10rem] font-light text-[#1c1713] tracking-tighter leading-tight italic"
           >
             {chapter.data.headline}
           </motion.h3>
+          <div className="w-24 h-px bg-[#b5893a]/30 mx-auto" />
           <motion.p
-            className="font-serif italic text-2xl md:text-3xl text-[#1c1713]/60 max-w-2xl mx-auto leading-relaxed"
+            className="font-serif italic text-3xl md:text-5xl text-[#1c1713]/60 max-w-5xl mx-auto leading-relaxed"
           >
             {chapter.data.body}
           </motion.p>
         </div>
+
+        <div className="lg:col-span-2" />
       </div>
     </motion.div>
   );
