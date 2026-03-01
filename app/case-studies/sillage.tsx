@@ -60,12 +60,13 @@ const SillageContent = () => {
 
   return (
     <div className={`${cormorant.variable} ${dmMono.variable} font-serif bg-[#fdfaf5] text-[#0d0d0d] selection:bg-[#c29f6b]/20 selection:text-[#0d0d0d] antialiased`}>
+      {/* Optimized Texture Overlay */}
       <div className="fixed inset-0 pointer-events-none z-[999] opacity-[0.03] mix-blend-multiply overflow-hidden">
         <svg width="100%" height="100%">
-          <filter id="grain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+          <filter id="optimizedGrain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
           </filter>
-          <rect width="100%" height="100%" filter="url(#grain)" />
+          <rect width="100%" height="100%" filter="url(#optimizedGrain)" />
         </svg>
       </div>
 
@@ -136,7 +137,7 @@ const SillageContent = () => {
             <div className="max-w-7xl w-full text-center space-y-48">
                <div className="space-y-12">
                   <span className="font-mono text-[0.8rem] uppercase tracking-[1em] text-[#c29f6b]">L'Intelligence Collective</span>
-                  <h2 className="text-9xl md:text-[18rem] font-light italic leading-tight tracking-tighter">HexaDON Log.</h2>
+                  <h2 className="text-9xl md:text-[18rem] font-light italic leading-tight tracking-tighter text-balance">HexaDON Log.</h2>
                </div>
                <div className="flex justify-center">
                   <IntelligencePanel />

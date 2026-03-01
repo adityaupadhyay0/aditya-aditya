@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSillage } from './SillageContext';
 import { useSillageAudio } from './SillageAudio';
@@ -21,7 +21,7 @@ export const ScentLab: React.FC = () => {
     const types = ['Orris', 'Vetiver', 'Aldehydes', 'Ambrette'];
     const type = types[Math.floor(Math.random() * types.length)];
     const colors = ['#c4956a', '#5c3d2e', '#d4e8f0', '#7a4f35'];
-    const freqs = [329.63, 220.00, 440.00, 164.81]; // E4, A3, A4, E3
+    const freqs = [329.63, 220.00, 440.00, 164.81];
     const index = types.indexOf(type);
 
     const newMolecule = {
@@ -32,7 +32,7 @@ export const ScentLab: React.FC = () => {
       type
     };
 
-    setMolecules(prev => [...prev, newMolecule].slice(-12));
+    setMolecules(prev => [...prev, newMolecule].slice(-10));
     setAmbientColor(colors[index]);
     playNotePing(newMolecule.freq);
     logEvent('lab_synthesis', { type });
@@ -41,12 +41,12 @@ export const ScentLab: React.FC = () => {
   return (
     <section
        className="py-64 px-12 relative overflow-hidden min-h-screen flex flex-col items-center transition-colors duration-1000"
-       style={{ backgroundColor: `${ambientColor}11` }}
+       style={{ backgroundColor: `${ambientColor}08` }}
     >
        <div className="absolute inset-0 pointer-events-none opacity-[0.02]">
           <svg width="100%" height="100%">
              <filter id="labNoise">
-                <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="4" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="3" />
              </filter>
              <rect width="100%" height="100%" filter="url(#labNoise)" />
           </svg>
@@ -58,15 +58,14 @@ export const ScentLab: React.FC = () => {
              <p className="font-mono text-[0.6rem] uppercase tracking-widest text-[#0d0d0d]/30">Paris · 75001</p>
           </div>
           <h2 className="text-8xl md:text-[12rem] font-light italic text-[#0d0d0d] tracking-tighter leading-none">The Lab.</h2>
-          <p className="font-serif italic text-3xl text-[#0d0d0d]/40 max-w-4xl mx-auto">Touch the void to release molecules. Bathe the atmosphere in your selection.</p>
+          <p className="font-serif italic text-3xl text-[#0d0d0d]/40 max-w-4xl mx-auto leading-tight">Touch the void to release molecules. Bathe the atmosphere in your selection.</p>
        </div>
 
        <div
           ref={containerRef}
           onClick={addMolecule}
-          className="relative w-full max-w-7xl aspect-[21/9] border border-[#0d0d0d]/5 bg-white/40 backdrop-blur-2xl cursor-crosshair overflow-hidden shadow-[0_100px_200px_rgba(0,0,0,0.02)]"
+          className="relative w-full max-w-7xl aspect-[21/9] border border-[#0d0d0d]/5 bg-white/40 backdrop-blur-2xl cursor-crosshair overflow-hidden shadow-[0_80px_160px_rgba(0,0,0,0.01)]"
        >
-          {/* Paris Architecture Subtle Line */}
           <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#c29f6b]/20 to-transparent" />
 
           <AnimatePresence>
@@ -75,14 +74,15 @@ export const ScentLab: React.FC = () => {
                   key={m.id}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{
-                     scale: [1, 4, 0],
-                     opacity: [0.6, 0.2, 0],
-                     x: [`${m.x}%`, `${m.x + (Math.random() - 0.5) * 40}%`],
-                     y: [`${m.y}%`, `${m.y - 60}%`]
+                     scale: [1, 5, 0],
+                     opacity: [0.7, 0.2, 0],
+                     // Animating left/top directly for container-relative positioning
+                     left: [`${m.x}%`, `${m.x + (Math.random() - 0.5) * 20}%`],
+                     top: [`${m.y}%`, `${m.y - 30}%`]
                   }}
-                  transition={{ duration: 6, ease: "easeOut" }}
-                  className="absolute w-32 h-32 rounded-full blur-[60px] pointer-events-none"
-                  style={{ backgroundColor: m.color, left: 0, top: 0, transform: 'translate(-50%, -50%)' }}
+                  transition={{ duration: 5, ease: "easeOut" }}
+                  className="absolute w-24 h-24 rounded-full blur-[50px] pointer-events-none -translate-x-1/2 -translate-y-1/2"
+                  style={{ backgroundColor: m.color }}
                />
              ))}
           </AnimatePresence>
@@ -104,7 +104,7 @@ export const ScentLab: React.FC = () => {
             { label: 'VETIVER BOURBON', color: '#5c3d2e' },
             { label: 'ALDEHYDES', color: '#d4e8f0' },
             { label: 'AMBRETTE SEED', color: '#7a4f35' }
-          ].map((ing, i) => (
+          ].map((ing) => (
              <div key={ing.label} className="flex flex-col items-center gap-6 group">
                 <div className="w-1.5 h-1.5 rounded-full transition-all duration-700 group-hover:scale-[3]" style={{ backgroundColor: ing.color }} />
                 <span className="font-mono text-[0.6rem] uppercase tracking-[0.5em] text-[#0d0d0d]/40 group-hover:text-[#0d0d0d] transition-colors">{ing.label}</span>
