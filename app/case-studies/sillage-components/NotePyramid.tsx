@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FragranceDNA, Note } from './sillageData';
 import { useSillageAudio } from './SillageAudio';
+import { useSillage } from './SillageContext';
 
 interface NotePyramidProps {
   product: FragranceDNA;
@@ -13,6 +14,20 @@ export const NotePyramid: React.FC<NotePyramidProps> = ({ product }) => {
   const [hoveredNote, setHoveredNote] = useState<Note | null>(null);
   const [synesthesiaNote, setSynesthesiaNote] = useState<Note | null>(null);
   const { playNotePing } = useSillageAudio();
+  const { setSoul } = useSillage();
+
+  const handleNoteClick = (note: Note) => {
+    setSynesthesiaNote(note);
+    setSoul({
+      color: note.color,
+      secondaryColor: '#fdfaf5',
+      texture: 'silk',
+      freq: note.name === 'Petrichor Accord' ? 440 : 220,
+      label: note.name
+    });
+    playNotePing(note.name === 'Petrichor Accord' ? 440 : 220);
+    setTimeout(() => setSynesthesiaNote(null), 2500);
+  };
 
   const renderTier = (label: string, notes: Note[], duration: string) => (
     <div className="w-full space-y-16">
@@ -32,11 +47,7 @@ export const NotePyramid: React.FC<NotePyramidProps> = ({ product }) => {
             key={note.name}
             onMouseEnter={() => setHoveredNote(note)}
             onMouseLeave={() => setHoveredNote(null)}
-            onClick={() => {
-              setSynesthesiaNote(note);
-              playNotePing(note.name === 'Petrichor Accord' ? 440 : 220);
-              setTimeout(() => setSynesthesiaNote(null), 2500);
-            }}
+            onClick={() => handleNoteClick(note)}
             whileHover={{ y: -16 }}
             className="p-16 border border-[#0d0d0d]/5 bg-white/40 backdrop-blur-2xl rounded-none text-left hover:border-[#c29f6b]/40 hover:bg-white transition-all duration-1000 relative group overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.03)]"
           >

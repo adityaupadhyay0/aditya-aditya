@@ -35,7 +35,7 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
   ];
 
   return (
-    <div ref={containerRef} className="relative h-[600vh] bg-[#f2ece0]">
+    <div ref={containerRef} className="relative h-[600vh] bg-[#fdfaf5]">
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
         {/* Dynamic Atmospheric Gradient */}
@@ -51,32 +51,33 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
         />
 
         <AnimatePresence>
-          {chapters.map((chapter) => (
+          {chapters.map((chapter, i) => (
             <ChapterView
               key={chapter.id}
               chapter={chapter}
               progress={smoothProgress}
+              index={i}
             />
           ))}
         </AnimatePresence>
 
         {/* Cinematic Scrubber */}
         <div className="absolute left-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-12 z-50">
-           <div className="font-mono text-[0.6rem] uppercase tracking-[0.6em] rotate-90 text-[#b5893a]/40 mb-12">Narrative</div>
-           <div className="h-64 w-px bg-[#1c1713]/10 relative">
+           <div className="font-mono text-[0.6rem] uppercase tracking-[0.6em] rotate-90 text-[#c29f6b]/40 mb-12">L'Histoire</div>
+           <div className="h-64 w-px bg-[#0d0d0d]/10 relative">
               <motion.div
-                 className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 border border-[#b5893a] bg-[#f2ece0] rounded-full"
+                 className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 border border-[#c29f6b] bg-[#fdfaf5] rounded-full"
                  style={{ y: useTransform(smoothProgress, [0, 1], [0, 256]) }}
               />
            </div>
-           <div className="font-mono text-[0.8rem] text-[#b5893a] pt-4">{currentChapterLabel}</div>
+           <div className="font-mono text-[0.8rem] text-[#c29f6b] pt-4">{currentChapterLabel}</div>
         </div>
       </div>
     </div>
   );
 };
 
-const ChapterView = ({ chapter, progress }: { chapter: any, progress: any }) => {
+const ChapterView = ({ chapter, progress, index }: { chapter: any, progress: any, index: number }) => {
   const isActive = useTransform(
     progress,
     [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
@@ -104,21 +105,29 @@ const ChapterView = ({ chapter, progress }: { chapter: any, progress: any }) => 
 
         <div className="lg:col-span-2 hidden lg:block">
            <motion.span
-             className="font-display italic text-[14rem] text-[#1c1713]/[0.02] leading-none select-none"
+             className="font-serif italic text-[14rem] text-[#0d0d0d]/[0.02] leading-none select-none"
            >
              {chapter.number}
            </motion.span>
         </div>
 
-        <div className="lg:col-span-8 text-center space-y-16">
+        <div className="lg:col-span-8 text-center space-y-16 relative">
+          <motion.div
+             initial={{ opacity: 0 }}
+             whileInView={{ opacity: 0.4 }}
+             className="absolute -top-32 left-0 font-serif italic text-2xl text-[#c29f6b] hidden lg:block"
+          >
+             Note du Parfumeur: {index === 0 ? "L'ouverture est électrique." : index === 1 ? "Le coeur est poudreux." : "Le sillage est éternel."}
+          </motion.div>
+
           <motion.h3
-            className="text-7xl md:text-[10rem] font-light text-[#1c1713] tracking-tighter leading-tight italic"
+            className="text-7xl md:text-[10rem] font-light text-[#0d0d0d] tracking-tighter leading-tight italic"
           >
             {chapter.data.headline}
           </motion.h3>
-          <div className="w-24 h-px bg-[#b5893a]/30 mx-auto" />
+          <div className="w-24 h-px bg-[#c29f6b]/30 mx-auto" />
           <motion.p
-            className="font-serif italic text-3xl md:text-5xl text-[#1c1713]/60 max-w-5xl mx-auto leading-relaxed"
+            className="font-serif italic text-3xl md:text-5xl text-[#0d0d0d]/60 max-w-5xl mx-auto leading-relaxed"
           >
             {chapter.data.body}
           </motion.p>

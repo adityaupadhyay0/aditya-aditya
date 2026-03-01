@@ -3,11 +3,12 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Archetype, ExperienceConfig, ARCHETYPE_CONFIGS } from './sillageData';
 
-interface IngredientSoul {
+export interface IngredientSoul {
   color: string;
   texture: 'silk' | 'dust' | 'mist' | 'earth';
   freq: number;
   label: string;
+  secondaryColor: string;
 }
 
 interface SessionContext {
