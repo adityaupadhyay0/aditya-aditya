@@ -3,6 +3,13 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Archetype, ExperienceConfig, ARCHETYPE_CONFIGS } from './sillageData';
 
+interface IngredientSoul {
+  color: string;
+  texture: 'silk' | 'dust' | 'mist' | 'earth';
+  freq: number;
+  label: string;
+}
+
 interface SessionContext {
   session_id: string;
   referral_source: string;
@@ -12,7 +19,8 @@ interface SessionContext {
   experience_config: ExperienceConfig;
   last_visit_days_ago?: number;
   is_returning: boolean;
-  cart: string[]; // product IDs
+  cart: string[];
+  activeSoul: IngredientSoul | null;
 }
 
 interface SillageContextType {
@@ -22,6 +30,7 @@ interface SillageContextType {
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
   logEvent: (event: string, data: any) => void;
+  setSoul: (soul: IngredientSoul | null) => void;
 }
 
 const SillageContext = createContext<SillageContextType | undefined>(undefined);
@@ -35,17 +44,16 @@ export function SillageProvider({ children }: { children: ReactNode }) {
     signals_observed: [],
     experience_config: ARCHETYPE_CONFIGS['the_explorer'],
     is_returning: false,
-    cart: []
+    cart: [],
+    activeSoul: null
   });
 
   useEffect(() => {
-    // Initial detection logic
     const referrer = typeof document !== 'undefined' ? document.referrer : '';
     let source = 'direct';
     if (referrer.includes('instagram.com') || referrer.includes('t.co')) source = 'social';
     else if (referrer.includes('google.com')) source = 'search';
 
-    // Check localStorage for returning customer
     let prevVisit = null;
     if (typeof localStorage !== 'undefined') {
        prevVisit = localStorage.getItem('sillage_last_visit');
@@ -83,19 +91,17 @@ export function SillageProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const setSoul = (soul: IngredientSoul | null) => {
+    setSession(prev => ({ ...prev, activeSoul: soul }));
+  };
+
   const addToCart = (productId: string) => {
-    setSession(prev => ({
-      ...prev,
-      cart: [...prev.cart, productId]
-    }));
+    setSession(prev => ({ ...prev, cart: [...prev.cart, productId] }));
     logEvent('add_to_cart', { product_id: productId });
   };
 
   const removeFromCart = (productId: string) => {
-    setSession(prev => ({
-      ...prev,
-      cart: prev.cart.filter(id => id !== productId)
-    }));
+    setSession(prev => ({ ...prev, cart: prev.cart.filter(id => id !== productId) }));
   };
 
   const clearCart = () => {
@@ -106,13 +112,12 @@ export function SillageProvider({ children }: { children: ReactNode }) {
     console.log(`[Sillage Analytics] ${event}:`, {
       ...data,
       session_id: session.session_id,
-      archetype: session.inferred_archetype,
       timestamp: new Date().toISOString()
     });
   };
 
   return (
-    <SillageContext.Provider value={{ session, updateArchetype, addToCart, removeFromCart, clearCart, logEvent }}>
+    <SillageContext.Provider value={{ session, updateArchetype, addToCart, removeFromCart, clearCart, logEvent, setSoul }}>
       {children}
     </SillageContext.Provider>
   );
@@ -120,8 +125,6 @@ export function SillageProvider({ children }: { children: ReactNode }) {
 
 export function useSillage() {
   const context = useContext(SillageContext);
-  if (context === undefined) {
-    throw new Error('useSillage must be used within a SillageProvider');
-  }
+  if (context === undefined) throw new Error('useSillage must be used within a SillageProvider');
   return context;
 }

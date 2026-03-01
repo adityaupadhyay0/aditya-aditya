@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { SillageProvider, useSillage } from './sillage-components/SillageContext';
 import { SillageAudioProvider, useSillageAudio } from './sillage-components/SillageAudio';
 import { PresenceHero } from './sillage-components/PresenceHero';
@@ -15,7 +15,7 @@ import { CTAButton } from './sillage-components/CTAButton';
 import { IntelligencePanel } from './sillage-components/IntelligencePanel';
 import { SoundToggle } from './sillage-components/SoundToggle';
 import { ConfirmationPage } from './sillage-components/ConfirmationPage';
-import { ScentLab } from './sillage-components/ScentLab';
+import { NoteWeaver } from './sillage-components/NoteWeaver';
 import { StageGraph } from './sillage-components/StageGraph';
 import { SILLAGE_PRODUCTS } from './sillage-components/sillageData';
 import { Cormorant_Garamond, DM_Mono } from 'next/font/google';
@@ -60,13 +60,25 @@ const SillageContent = () => {
 
   return (
     <div className={`${cormorant.variable} ${dmMono.variable} font-serif bg-[#fdfaf5] text-[#0d0d0d] selection:bg-[#c29f6b]/20 selection:text-[#0d0d0d] antialiased`}>
-      {/* Optimized Texture Overlay */}
+      {/* Dynamic Soul Overlay */}
+      <AnimatePresence>
+         {session.activeSoul && (
+           <motion.div
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 0.08 }}
+             exit={{ opacity: 0 }}
+             className="fixed inset-0 z-[10] pointer-events-none transition-colors duration-1000"
+             style={{ backgroundColor: session.activeSoul.color }}
+           />
+         )}
+      </AnimatePresence>
+
       <div className="fixed inset-0 pointer-events-none z-[999] opacity-[0.03] mix-blend-multiply overflow-hidden">
         <svg width="100%" height="100%">
-          <filter id="optimizedGrain">
+          <filter id="grain">
             <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
           </filter>
-          <rect width="100%" height="100%" filter="url(#optimizedGrain)" />
+          <rect width="100%" height="100%" filter="url(#grain)" />
         </svg>
       </div>
 
@@ -81,24 +93,24 @@ const SillageContent = () => {
       <PresenceHero product={product} />
 
       <div ref={containerRef}>
-        <section className="py-[40vh] px-12 flex flex-col items-center bg-white/30 border-b border-[#0d0d0d]/5">
+        <section className="py-[30vh] px-12 flex flex-col items-center bg-white/10 border-b border-[#0d0d0d]/5">
            <motion.div
              initial={{ opacity: 0 }}
              whileInView={{ opacity: 1 }}
              viewport={{ once: true }}
              transition={{ duration: 2.5 }}
-             className="max-w-[1400px] text-center space-y-32 scale-[0.9]"
+             className="max-w-[1400px] text-center space-y-32"
            >
               <div className="space-y-8">
-                <span className="font-mono text-[0.8rem] uppercase tracking-[1em] text-[#c29f6b]">L'Origine du Parfum</span>
+                <span className="font-mono text-[0.7rem] uppercase tracking-[1em] text-[#c29f6b]">L'Origine du Parfum</span>
                 <div className="h-px w-32 bg-[#c29f6b]/30 mx-auto" />
               </div>
-              <h2 className="text-9xl md:text-[16rem] font-light italic leading-[0.85] text-balance tracking-tighter">
-                "L'invisible devient palpable."
+              <h2 className="text-8xl md:text-[18rem] font-light italic leading-[0.8] text-balance tracking-tighter">
+                "The Soul of No. 3"
               </h2>
               <div className="space-y-16">
-                <p className="font-serif italic text-4xl md:text-6xl text-[#0d0d0d]/40 leading-tight max-w-[1200px] mx-auto">
-                   The customer who lands on a HexaDON experience does not feel sold to. They feel found.
+                <p className="font-serif italic text-4xl md:text-5xl text-[#0d0d0d]/40 leading-tight max-w-[1200px] mx-auto">
+                   You are not here to shop. You are here to be found.
                 </p>
                 <div className="flex justify-center pt-24">
                    <StageGraph accords={[
@@ -115,7 +127,7 @@ const SillageContent = () => {
 
         <NotePyramid product={product} />
 
-        <ScentLab />
+        <NoteWeaver />
 
         <StoryArcScroll product={product} />
 
@@ -137,7 +149,7 @@ const SillageContent = () => {
             <div className="max-w-7xl w-full text-center space-y-48">
                <div className="space-y-12">
                   <span className="font-mono text-[0.8rem] uppercase tracking-[1em] text-[#c29f6b]">L'Intelligence Collective</span>
-                  <h2 className="text-9xl md:text-[18rem] font-light italic leading-tight tracking-tighter text-balance">HexaDON Log.</h2>
+                  <h2 className="text-9xl md:text-[20rem] font-light italic leading-tight tracking-tighter text-balance">Data Spirit.</h2>
                </div>
                <div className="flex justify-center">
                   <IntelligencePanel />
@@ -157,18 +169,15 @@ const SillageContent = () => {
       </div>
 
       <footer className="py-64 px-24 border-t border-[#0d0d0d]/5 bg-white/60 flex flex-col md:flex-row justify-between items-end gap-32 font-mono text-[0.8rem] uppercase tracking-[0.6em] text-[#0d0d0d]/40">
-        <div className="space-y-16">
+        <div className="space-y-16 text-left">
            <div className="flex items-center gap-16">
               <span className="italic tracking-[0.4em] font-serif text-4xl text-[#0d0d0d]">SILLAGE</span>
               <span className="w-px h-16 bg-[#0d0d0d]/10 hidden md:block" />
               <div className="space-y-4">
-                 <p className="text-[0.7rem]">High-Authority Infrastructure</p>
-                 <p className="text-[0.7rem]">Paris · Grasse · New York</p>
+                 <p className="text-[0.7rem]">Paris Atelier v.4.2</p>
+                 <p className="text-[0.7rem]">Maison Leroux</p>
               </div>
            </div>
-           <p className="text-[0.6rem] tracking-widest leading-loose max-w-md opacity-60">
-              A HexaDON × DTC Fragrance Experience. Optimized for conversion, engineered for desire.
-           </p>
         </div>
 
         <div className="flex flex-col md:items-end gap-24">
@@ -194,6 +203,7 @@ const SillageContent = () => {
           background-color: var(--sillage-bg);
           color: var(--sillage-ink);
           overflow-x: hidden;
+          font-size: 14px;
         }
 
         .font-display { font-family: var(--font-display); }
@@ -202,7 +212,14 @@ const SillageContent = () => {
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: var(--sillage-bg); }
         ::-webkit-scrollbar-thumb { background: #c29f6b22; }
-        ::-webkit-scrollbar-thumb:hover { background: #c29f6b44; }
+
+        @keyframes spin-slow {
+           from { transform: rotate(0deg); }
+           to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+           animation: spin-slow 120s linear infinite;
+        }
       `}</style>
     </div>
   );
