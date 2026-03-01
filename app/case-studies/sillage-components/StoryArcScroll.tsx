@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence, useMotionValueEvent } from 'framer-motion';
 import { FragranceDNA } from './sillageData';
 
 interface StoryArcScrollProps {
@@ -21,11 +21,19 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
     restDelta: 0.001
   });
 
+  const [currentChapterLabel, setCurrentChapterLabel] = useState("I");
+
   const chapters = [
     { id: 'opening', data: product.story_arc.opening, number: 'I', range: [0, 0.33] },
     { id: 'evolution', data: product.story_arc.evolution, number: 'II', range: [0.33, 0.66] },
     { id: 'signature', data: product.story_arc.signature, number: 'III', range: [0.66, 1] }
   ];
+
+  const chapterValue = useTransform(smoothProgress, [0, 0.33, 0.66, 1], ["I", "I", "II", "III"]);
+
+  useMotionValueEvent(chapterValue, "change", (latest) => {
+    setCurrentChapterLabel(latest);
+  });
 
   return (
     <div ref={containerRef} className="relative h-[400vh] bg-[#f2ece0]">
@@ -37,46 +45,40 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
            className="absolute w-[150%] h-[150%] border border-[#b5893a]/5 rounded-full pointer-events-none"
         />
 
-        <AnimatePresence mode="wait">
-          {chapters.map((chapter, i) => {
-            const opacity = useTransform(
-              smoothProgress,
-              [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
-              [0, 1, 0]
-            );
-            const y = useTransform(
-              smoothProgress,
-              [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
-              [100, 0, -100]
-            );
-
-            return (
-              <ChapterView
-                key={chapter.id}
-                chapter={chapter}
-                opacity={opacity}
-                y={y}
-              />
-            );
-          })}
+        <AnimatePresence>
+          {chapters.map((chapter) => (
+            <ChapterView
+              key={chapter.id}
+              chapter={chapter}
+              progress={smoothProgress}
+            />
+          ))}
         </AnimatePresence>
 
         {/* Floating Page Number */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
            <div className="h-12 w-px bg-[#b5893a]/20" />
-           <motion.span
-             className="font-mono text-[0.6rem] uppercase tracking-[0.5em] text-[#b5893a]"
-             style={{ opacity: useTransform(smoothProgress, [0, 1], [1, 1]) }}
-           >
-              Chapter {useTransform(smoothProgress, [0, 0.33, 0.66, 1], ["I", "I", "II", "III"])}
-           </motion.span>
+           <span className="font-mono text-[0.6rem] uppercase tracking-[0.5em] text-[#b5893a]">
+              Chapter {currentChapterLabel}
+           </span>
         </div>
       </div>
     </div>
   );
 };
 
-const ChapterView = ({ chapter, opacity, y }: { chapter: any, opacity: any, y: any }) => {
+const ChapterView = ({ chapter, progress }: { chapter: any, progress: any }) => {
+  const opacity = useTransform(
+    progress,
+    [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
+    [0, 1, 0]
+  );
+  const y = useTransform(
+    progress,
+    [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
+    [100, 0, -100]
+  );
+
   return (
     <motion.div
       style={{ opacity, y }}
