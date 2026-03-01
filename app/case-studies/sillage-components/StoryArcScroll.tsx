@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { FragranceDNA } from './sillageData';
 
 interface StoryArcScrollProps {
@@ -15,83 +15,95 @@ export const StoryArcScroll: React.FC<StoryArcScrollProps> = ({ product }) => {
     offset: ["start start", "end end"]
   });
 
-  const smoothScroll = useSpring(scrollYProgress, {
+  const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
 
-  const bgOpacityTop = useTransform(smoothScroll, [0, 0.3], [0.08, 0]);
-  const bgOpacityHeart = useTransform(smoothScroll, [0.3, 0.5, 0.7], [0, 0.08, 0]);
-  const bgOpacityBase = useTransform(smoothScroll, [0.7, 0.9], [0, 0.08]);
-
   const chapters = [
-    { id: 'opening', data: product.story_arc.opening, number: '01', colors: product.notes.top.map(n => n.color) },
-    { id: 'evolution', data: product.story_arc.evolution, number: '02', colors: product.notes.heart.map(n => n.color) },
-    { id: 'signature', data: product.story_arc.signature, number: '03', colors: product.notes.base.map(n => n.color) }
+    { id: 'opening', data: product.story_arc.opening, number: 'I', range: [0, 0.33] },
+    { id: 'evolution', data: product.story_arc.evolution, number: 'II', range: [0.33, 0.66] },
+    { id: 'signature', data: product.story_arc.signature, number: 'III', range: [0.66, 1] }
   ];
 
   return (
-    <div ref={containerRef} className="relative bg-[#0a0908]">
-       <motion.div
-         className="fixed inset-0 pointer-events-none"
-         style={{
-           opacity: bgOpacityTop,
-           background: `radial-gradient(circle at 50% 50%, ${chapters[0].colors[0]}44 0%, transparent 70%)`
-         }}
-       />
-       <motion.div
-         className="fixed inset-0 pointer-events-none"
-         style={{
-           opacity: bgOpacityHeart,
-           background: `radial-gradient(circle at 50% 50%, ${chapters[1].colors[0]}44 0%, transparent 70%)`
-         }}
-       />
-       <motion.div
-         className="fixed inset-0 pointer-events-none"
-         style={{
-           opacity: bgOpacityBase,
-           background: `radial-gradient(circle at 50% 50%, ${chapters[2].colors[0]}44 0%, transparent 70%)`
-         }}
-       />
+    <div ref={containerRef} className="relative h-[400vh] bg-[#f2ece0]">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
-       {chapters.map((chapter, i) => (
-         <section
-           key={chapter.id}
-           className="h-screen w-full flex items-center justify-center p-8 sticky top-0"
-         >
-           <div className="max-w-4xl w-full text-center space-y-12 relative z-10">
-             <motion.span
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 0.1, y: 0 }}
-               viewport={{ once: true }}
-               className="block font-serif text-[12vw] font-bold text-[#f0ebe0] tracking-tight leading-none mb-4"
-             >
-               {chapter.number}
-             </motion.span>
-             <motion.h3
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ delay: 0.2 }}
-               className="text-4xl md:text-6xl font-light text-[#f0ebe0] italic leading-tight"
-             >
-               {chapter.data.headline}
-             </motion.h3>
-             <motion.p
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 0.7, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ delay: 0.4 }}
-               className="font-serif italic text-xl md:text-2xl text-[#f0ebe0] max-w-2xl mx-auto leading-relaxed"
-             >
-               {chapter.data.body}
-             </motion.p>
-           </div>
-         </section>
-       ))}
+        {/* Decorative Background Elements */}
+        <motion.div
+           style={{ rotate: useTransform(smoothProgress, [0, 1], [0, 45]) }}
+           className="absolute w-[150%] h-[150%] border border-[#b5893a]/5 rounded-full pointer-events-none"
+        />
 
-       <div className="h-[100vh]" />
+        <AnimatePresence mode="wait">
+          {chapters.map((chapter, i) => {
+            const opacity = useTransform(
+              smoothProgress,
+              [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
+              [0, 1, 0]
+            );
+            const y = useTransform(
+              smoothProgress,
+              [chapter.range[0], (chapter.range[0] + chapter.range[1]) / 2, chapter.range[1]],
+              [100, 0, -100]
+            );
+
+            return (
+              <ChapterView
+                key={chapter.id}
+                chapter={chapter}
+                opacity={opacity}
+                y={y}
+              />
+            );
+          })}
+        </AnimatePresence>
+
+        {/* Floating Page Number */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
+           <div className="h-12 w-px bg-[#b5893a]/20" />
+           <motion.span
+             className="font-mono text-[0.6rem] uppercase tracking-[0.5em] text-[#b5893a]"
+             style={{ opacity: useTransform(smoothProgress, [0, 1], [1, 1]) }}
+           >
+              Chapter {useTransform(smoothProgress, [0, 0.33, 0.66, 1], ["I", "I", "II", "III"])}
+           </motion.span>
+        </div>
+      </div>
     </div>
+  );
+};
+
+const ChapterView = ({ chapter, opacity, y }: { chapter: any, opacity: any, y: any }) => {
+  return (
+    <motion.div
+      style={{ opacity, y }}
+      className="absolute inset-0 flex items-center justify-center p-8"
+    >
+      <div className="max-w-4xl w-full text-center space-y-12">
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.03 }}
+          className="absolute inset-0 flex items-center justify-center font-display text-[40vw] font-bold text-[#1c1713] pointer-events-none select-none"
+        >
+          {chapter.number}
+        </motion.span>
+
+        <div className="relative z-10 space-y-12">
+          <motion.h3
+            className="text-5xl md:text-8xl font-light text-[#1c1713] italic leading-tight"
+          >
+            {chapter.data.headline}
+          </motion.h3>
+          <motion.p
+            className="font-serif italic text-2xl md:text-3xl text-[#1c1713]/60 max-w-2xl mx-auto leading-relaxed"
+          >
+            {chapter.data.body}
+          </motion.p>
+        </div>
+      </div>
+    </motion.div>
   );
 };

@@ -13,15 +13,16 @@ export const CTAButton: React.FC = () => {
       onClick={() => addToCart('no3-before-rain')}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.98 }}
-      className="relative px-12 py-6 bg-[#c9a96e] text-[#0a0908] font-mono text-sm uppercase tracking-[0.2em] transition-all duration-500 overflow-hidden group"
+      className="relative px-16 py-8 bg-[#1c1713] text-[#f2ece0] font-mono text-xs uppercase tracking-[0.4em] transition-all duration-700 group overflow-hidden"
     >
-      <span className="relative z-10">{experience_config.cta_copy}</span>
+      <span className="relative z-10 transition-colors duration-700 group-hover:text-[#1c1713]">{experience_config.cta_copy}</span>
       <motion.div
-         initial={{ x: "-100%" }}
-         whileHover={{ x: "0%" }}
-         className="absolute inset-0 bg-[#f0ebe0] z-0"
-         transition={{ duration: 0.5, ease: "easeInOut" }}
+         initial={{ y: "100%" }}
+         whileHover={{ y: "0%" }}
+         className="absolute inset-0 bg-[#b5893a] z-0"
+         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       />
+      <div className="absolute inset-0 border border-[#b5893a]/20 pointer-events-none" />
     </motion.button>
   );
 };

@@ -15,7 +15,7 @@ export const DiscoveryQuestion: React.FC = () => {
       if (!answered && session.confidence < 0.65) {
         setShow(true);
       }
-    }, 15000);
+    }, 10000); // Show earlier for demo
     return () => clearTimeout(timer);
   }, [answered, session.confidence]);
 
@@ -33,7 +33,7 @@ export const DiscoveryQuestion: React.FC = () => {
   ];
 
   const handleAnswer = (archetype: Archetype) => {
-    updateArchetype(archetype, 0.9, 'discovery_question_answered');
+    updateArchetype(archetype, 0.95, 'discovery_question_answered');
     setAnswered(true);
     setShow(false);
   };
@@ -42,36 +42,45 @@ export const DiscoveryQuestion: React.FC = () => {
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[#0a0908]/80 backdrop-blur-xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[1000] flex items-center justify-center p-8 bg-[#f2ece0]/95 backdrop-blur-3xl"
         >
-          <div className="max-w-2xl w-full p-12 border border-[#c9a96e]/30 bg-[#161210] shadow-2xl space-y-12">
-            <div className="space-y-6">
-               <span className="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#c9a96e]">A Single Question</span>
-               <h3 className="text-4xl font-light text-[#f0ebe0] italic leading-tight">
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-4xl w-full p-24 bg-white border border-[#b5893a]/10 shadow-[0_50px_150px_rgba(0,0,0,0.1)] space-y-24 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#b5893a] to-transparent" />
+
+            <div className="space-y-12 text-center">
+               <span className="font-mono text-[0.7rem] uppercase tracking-[0.6em] text-[#b5893a]">Context Engine</span>
+               <h3 className="text-5xl md:text-7xl font-light text-[#1c1713] italic leading-tight text-balance">
                  {questions[0].text}
                </h3>
             </div>
-            <div className="grid grid-cols-1 gap-4">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {questions[0].options.map((option, i) => (
                 <button
                   key={i}
                   onClick={() => handleAnswer(option.archetype)}
-                  className="p-6 border border-[#f0ebe0]/5 text-left font-serif italic text-lg text-[#f0ebe0]/60 hover:text-[#f0ebe0] hover:border-[#c9a96e]/30 hover:bg-[#c9a96e]/5 transition-all duration-500"
+                  className="group p-10 border border-[#1c1713]/5 text-center font-serif italic text-2xl text-[#1c1713]/40 hover:text-[#1c1713] hover:border-[#b5893a]/40 hover:bg-white transition-all duration-700"
                 >
                   "{option.text}"
                 </button>
               ))}
             </div>
+
             <button
               onClick={() => setShow(false)}
-              className="w-full font-mono text-[0.6rem] uppercase tracking-widest text-[#f0ebe0]/20 hover:text-[#f0ebe0] transition-colors pt-6"
+              className="w-full font-mono text-[0.6rem] uppercase tracking-[0.5em] text-[#1c1713]/20 hover:text-[#1c1713] transition-all duration-700 pt-12"
             >
-              [ Dismiss ]
+              [ I know my frequency ]
             </button>
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

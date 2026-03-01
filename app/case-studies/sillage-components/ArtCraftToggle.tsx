@@ -14,28 +14,35 @@ export const ArtCraftToggle: React.FC<ArtCraftToggleProps> = ({ product }) => {
   const renderArt = () => (
     <motion.div
       key="art"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-12"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="space-y-24"
     >
-      <div className="space-y-6">
-        <h3 className="text-4xl font-light italic text-[#f0ebe0]">{product.story_arc.opening.headline}</h3>
-        <p className="font-serif italic text-xl text-[#f0ebe0]/70 leading-relaxed max-w-2xl">
+      <div className="space-y-8">
+        <h3 className="text-5xl md:text-7xl font-light italic text-[#1c1713] leading-tight">
+          {product.story_arc.opening.headline}
+        </h3>
+        <p className="font-serif italic text-2xl md:text-3xl text-[#1c1713]/50 leading-relaxed max-w-3xl">
           {product.story_arc.opening.body}
         </p>
       </div>
-      <div className="flex flex-col gap-4">
-        <span className="font-mono text-[0.6rem] uppercase tracking-widest text-[#8a6e44] italic">Key Impressions</span>
-        <div className="flex flex-wrap gap-8">
-           {product.notes.top.map(n => (
-             <div key={n.name} className="flex flex-col gap-2">
-               <span className="font-serif text-lg uppercase tracking-tight text-[#f0ebe0]">{n.name}</span>
-               <span className="font-mono text-[0.5rem] uppercase tracking-widest text-[#c9a96e]/60">{n.feeling}</span>
-             </div>
-           ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+        {product.notes.top.map((n, i) => (
+          <motion.div
+            key={n.name}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.2 }}
+            className="space-y-4"
+          >
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#b5893a]">Chapter {i + 1}</span>
+            <h4 className="font-serif text-3xl uppercase tracking-tighter text-[#1c1713]">{n.name}</h4>
+            <div className="h-px w-12 bg-[#b5893a]/30" />
+            <p className="font-serif italic text-lg text-[#1c1713]/40 leading-relaxed">{n.feeling}</p>
+          </motion.div>
+        ))}
       </div>
     </motion.div>
   );
@@ -43,48 +50,47 @@ export const ArtCraftToggle: React.FC<ArtCraftToggleProps> = ({ product }) => {
   const renderCraft = () => (
     <motion.div
       key="craft"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-12"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="space-y-24"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+        <div className="space-y-16">
            <CraftFact label="Concentration" value={`${product.craft.concentration} — ${product.craft.concentration_label}`} />
-           <CraftFact label="Iterations" value={`${product.craft.iterations} before this formula was approved.`} />
+           <CraftFact label="Iterations" value={`${product.craft.iterations} development stages.`} />
            <CraftFact label="Perfumer" value={product.craft.perfumer} />
         </div>
-        <div className="space-y-8">
-           <CraftFact label="Source: Iris" value={product.craft.sourcing.iris} />
-           <CraftFact label="Source: Vetiver" value={product.craft.sourcing.vetiver} />
-           <CraftFact label="Batch Size" value={product.craft.batch_label} />
+        <div className="space-y-16">
+           <CraftFact label="Florentine Iris" value={product.craft.sourcing.iris} />
+           <CraftFact label="Réunion Vetiver" value={product.craft.sourcing.vetiver} />
+           <CraftFact label="Availability" value={product.craft.batch_label} />
         </div>
       </div>
     </motion.div>
   );
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-6 py-24 border-t border-[#f0ebe0]/5">
-      <div className="flex items-center gap-12 mb-16">
-        <button
-          onClick={() => setActiveTab('art')}
-          className={`font-mono text-[0.6rem] uppercase tracking-[0.4em] transition-all duration-500 relative pb-2 ${activeTab === 'art' ? 'text-[#c9a96e]' : 'text-[#f0ebe0]/30 hover:text-[#f0ebe0]'}`}
-        >
-          [ The Art ]
-          {activeTab === 'art' && (
-            <motion.div layoutId="underline" className="absolute bottom-0 left-0 right-0 h-px bg-[#c9a96e]" />
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('craft')}
-          className={`font-mono text-[0.6rem] uppercase tracking-[0.4em] transition-all duration-500 relative pb-2 ${activeTab === 'craft' ? 'text-[#c9a96e]' : 'text-[#f0ebe0]/30 hover:text-[#f0ebe0]'}`}
-        >
-          [ The Craft ]
-          {activeTab === 'craft' && (
-            <motion.div layoutId="underline" className="absolute bottom-0 left-0 right-0 h-px bg-[#c9a96e]" />
-          )}
-        </button>
+    <div className="w-full max-w-6xl mx-auto px-8">
+      <div className="flex items-center justify-center gap-16 mb-32">
+        {['art', 'craft'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab as any)}
+            className={`group flex flex-col items-center gap-4 transition-all duration-700`}
+          >
+            <span className={`font-mono text-[0.7rem] uppercase tracking-[0.6em] ${activeTab === tab ? 'text-[#b5893a]' : 'text-[#1c1713]/30 group-hover:text-[#1c1713]'}`}>
+              {tab === 'art' ? 'The Sensory' : 'The Rational'}
+            </span>
+            <motion.div
+               className="h-px bg-[#b5893a]"
+               initial={{ width: 0 }}
+               animate={{ width: activeTab === tab ? 40 : 0 }}
+               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </button>
+        ))}
       </div>
 
       <AnimatePresence mode="wait">
@@ -95,9 +101,9 @@ export const ArtCraftToggle: React.FC<ArtCraftToggleProps> = ({ product }) => {
 };
 
 const CraftFact = ({ label, value }: { label: string, value: string }) => (
-  <div className="group cursor-default">
-    <span className="font-mono text-[0.5rem] uppercase tracking-[0.3em] text-[#8a6e44] mb-2 block">{label}</span>
-    <p className="font-serif text-lg text-[#f0ebe0] opacity-80 group-hover:opacity-100 transition-opacity">
+  <div className="space-y-6 group">
+    <span className="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#8a6e44] block border-l-2 border-[#b5893a]/20 pl-4">{label}</span>
+    <p className="font-serif text-3xl text-[#1c1713] font-light leading-snug group-hover:pl-2 transition-all duration-700">
       {value}
     </p>
   </div>

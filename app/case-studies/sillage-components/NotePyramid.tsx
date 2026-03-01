@@ -10,109 +10,91 @@ interface NotePyramidProps {
 
 export const NotePyramid: React.FC<NotePyramidProps> = ({ product }) => {
   const [hoveredNote, setHoveredNote] = useState<Note | null>(null);
-  const [activeTier, setActiveTier] = useState<'top' | 'heart' | 'base' | null>(null);
   const [synesthesiaNote, setSynesthesiaNote] = useState<Note | null>(null);
 
-  const renderNotePill = (note: Note, tier: 'top' | 'heart' | 'base') => (
-    <motion.button
-      key={note.name}
-      onMouseEnter={() => setHoveredNote(note)}
-      onMouseLeave={() => setHoveredNote(null)}
-      onClick={() => {
-        setSynesthesiaNote(note);
-        setTimeout(() => setSynesthesiaNote(null), 2500);
-      }}
-      className="px-6 py-3 border border-[#f0ebe0]/10 bg-[#f0ebe0]/5 backdrop-blur-sm rounded-none font-serif text-sm text-[#f0ebe0] hover:bg-[#f0ebe0]/10 hover:border-[#f0ebe0]/30 transition-all duration-300 relative group overflow-hidden"
-    >
-      <motion.div
-         className="absolute inset-0 origin-center bg-[#f0ebe0]/10"
-         initial={{ scale: 0 }}
-         whileHover={{ scale: 1 }}
-         transition={{ duration: 0.2 }}
-      />
-      <span className="relative z-10">{note.name}</span>
-    </motion.button>
+  const renderTier = (label: string, notes: Note[], duration: string) => (
+    <div className="w-full space-y-8">
+      <div className="flex justify-between items-baseline border-b border-[#1c1713]/10 pb-4">
+        <span className="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#b5893a]">{label}</span>
+        <span className="font-mono text-[0.5rem] uppercase tracking-widest text-[#1c1713]/30">{duration}</span>
+      </div>
+      <div className="flex flex-wrap gap-4">
+        {notes.map(note => (
+          <motion.button
+            key={note.name}
+            onMouseEnter={() => setHoveredNote(note)}
+            onMouseLeave={() => setHoveredNote(null)}
+            onClick={() => {
+              setSynesthesiaNote(note);
+              setTimeout(() => setSynesthesiaNote(null), 2500);
+            }}
+            whileHover={{ scale: 1.02 }}
+            className="px-8 py-4 border border-[#1c1713]/5 bg-white/50 backdrop-blur-sm rounded-none font-serif text-lg text-[#1c1713] hover:border-[#b5893a]/30 hover:bg-white transition-all duration-500 relative group overflow-hidden"
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-[#b5893a]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+            />
+            <span className="relative z-10">{note.name}</span>
+          </motion.button>
+        ))}
+      </div>
+    </div>
   );
 
   return (
-    <section className="py-32 px-6 flex flex-col items-center relative overflow-hidden bg-[#0a0908]">
+    <section className="py-64 px-8 flex flex-col items-center relative overflow-hidden bg-[#f2ece0]">
+      {/* Synesthesia Watermark */}
       <AnimatePresence>
         {synesthesiaNote && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 0.04, scale: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.9, y: 50 }}
+            animate={{ opacity: 0.05, scale: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
             className="fixed inset-0 flex items-center justify-center pointer-events-none z-0"
           >
-            <span className="text-[25vw] font-serif uppercase tracking-[0.1em] text-[#f0ebe0]">
+            <span className="text-[20vw] font-display uppercase tracking-[0.2em] text-[#1c1713]">
               {synesthesiaNote.energy}
             </span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="max-w-4xl w-full space-y-24 relative z-10">
-        <div className="text-center space-y-6">
-           <span className="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#8a6e44]">Pillar 01 — Authority</span>
-           <h2 className="text-5xl font-light text-[#f0ebe0] italic leading-tight">The Note Pyramid</h2>
-           <p className="font-serif italic text-xl text-[#f0ebe0]/40">"A taxonomy of desire, revealed in layers."</p>
+      <div className="max-w-5xl w-full space-y-32 relative z-10">
+        <div className="text-center space-y-8">
+           <span className="font-mono text-[0.7rem] uppercase tracking-[0.5em] text-[#b5893a]">Pillar 01 — Authority</span>
+           <h2 className="text-6xl md:text-8xl font-light text-[#1c1713] italic leading-tight">The Note Pyramid</h2>
+           <p className="font-serif italic text-2xl text-[#1c1713]/40 max-w-2xl mx-auto">"Sensory architecture mapped through time."</p>
         </div>
 
-        <div className="flex flex-col items-center gap-4">
-          <div
-            className="w-full max-w-[400px] flex flex-wrap justify-center gap-4 p-8 border border-[#f0ebe0]/5 transition-all duration-500"
-            style={{ backgroundColor: activeTier === 'top' ? `${product.notes.top[0].color}11` : 'transparent' }}
-            onMouseEnter={() => setActiveTier('top')}
-            onMouseLeave={() => setActiveTier(null)}
-          >
-            <div className="w-full flex justify-between items-baseline mb-4 opacity-40 font-mono text-[0.5rem] uppercase tracking-widest">
-               <span>Top Notes</span>
-               <span>0 – 30 min</span>
-            </div>
-            {product.notes.top.map(n => renderNotePill(n, 'top'))}
-          </div>
-
-          <div
-            className="w-full max-w-[600px] flex flex-wrap justify-center gap-4 p-10 border border-[#f0ebe0]/5 transition-all duration-500"
-            style={{ backgroundColor: activeTier === 'heart' ? `${product.notes.heart[0].color}11` : 'transparent' }}
-            onMouseEnter={() => setActiveTier('heart')}
-            onMouseLeave={() => setActiveTier(null)}
-          >
-            <div className="w-full flex justify-between items-baseline mb-4 opacity-40 font-mono text-[0.5rem] uppercase tracking-widest">
-               <span>Heart Notes</span>
-               <span>30 min – 5 hours</span>
-            </div>
-            {product.notes.heart.map(n => renderNotePill(n, 'heart'))}
-          </div>
-
-          <div
-            className="w-full max-w-[800px] flex flex-wrap justify-center gap-4 p-12 border border-[#f0ebe0]/5 transition-all duration-500"
-            style={{ backgroundColor: activeTier === 'base' ? `${product.notes.base[0].color}11` : 'transparent' }}
-            onMouseEnter={() => setActiveTier('base')}
-            onMouseLeave={() => setActiveTier(null)}
-          >
-            <div className="w-full flex justify-between items-baseline mb-4 opacity-40 font-mono text-[0.5rem] uppercase tracking-widest">
-               <span>Base Notes</span>
-               <span>5 hours → forever</span>
-            </div>
-            {product.notes.base.map(n => renderNotePill(n, 'base'))}
-          </div>
+        <div className="grid grid-cols-1 gap-24">
+          {renderTier("Top Notes", product.notes.top, "0 – 30 min")}
+          {renderTier("Heart Notes", product.notes.heart, "30 min – 5 hours")}
+          {renderTier("Base Notes", product.notes.base, "5 hours → forever")}
         </div>
       </div>
 
+      {/* Floating Insight Card */}
       <AnimatePresence>
         {hoveredNote && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="fixed bottom-12 right-12 w-80 p-8 border border-[#f0ebe0]/10 bg-[#161210]/90 backdrop-blur-xl z-[100] shadow-2xl"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="fixed bottom-12 right-12 w-96 p-10 bg-white/90 backdrop-blur-2xl border border-[#b5893a]/10 z-[100] shadow-[0_30px_100px_rgba(0,0,0,0.05)]"
           >
-            <span className="font-mono text-[0.5rem] uppercase tracking-widest text-[#c9a96e] mb-4 block">{hoveredNote.energy} — {hoveredNote.duration_label}</span>
-            <h4 className="text-2xl font-light text-[#f0ebe0] mb-4 uppercase tracking-tighter">{hoveredNote.name}</h4>
-            <p className="font-serif italic text-lg text-[#f0ebe0] mb-6 leading-relaxed">"{hoveredNote.feeling}"</p>
-            <div className="h-px w-12 bg-[#c9a96e]/30 mb-6" />
-            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-[#f0ebe0]/40 leading-relaxed">Occasion: {hoveredNote.occasion}</p>
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <span className="font-mono text-[0.6rem] uppercase tracking-widest text-[#b5893a]">{hoveredNote.duration_label}</span>
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: hoveredNote.color }} />
+              </div>
+              <h4 className="text-3xl font-light text-[#1c1713] uppercase tracking-tighter">{hoveredNote.name}</h4>
+              <p className="font-serif italic text-xl text-[#1c1713] leading-relaxed">"{hoveredNote.feeling}"</p>
+              <div className="h-px w-full bg-[#1c1713]/5" />
+              <div className="space-y-2">
+                <span className="font-mono text-[0.5rem] uppercase tracking-widest text-[#1c1713]/40">Occasion</span>
+                <p className="font-serif text-sm text-[#1c1713]/80">{hoveredNote.occasion}</p>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
