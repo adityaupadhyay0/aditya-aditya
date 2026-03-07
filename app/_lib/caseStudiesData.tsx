@@ -4,6 +4,7 @@ import LuxuryClienteling from '../case-studies/luxury-clienteling';
 import MarketPlaceCaseStudy from '../case-studies/market-place';
 import LivingMachine from '../case-studies/living-machine';
 import DTCCaseStudy from '../case-studies/dtc';
+import JewelIntelligence from '../case-studies/jewel-intelligence';
 
 export interface CaseStudy {
   id: string;
@@ -77,5 +78,17 @@ export const caseStudiesData: CaseStudy[] = [
       { metric: 'LTV', value: '↑ 2.8×' },
     ],
     content: <DTCCaseStudy />
+  },
+  {
+    id: 'jewel-intelligence',
+    category: 'Case Study · Jewellery',
+    title: 'Jewel Intelligence',
+    description:
+      'Moving the trust of fine jewellery stores into a system — without making it feel like one.',
+    metrics: [
+      { metric: 'Lifetime Spend', value: '↑ 24%' },
+      { metric: 'Trust', value: 'Absolute' },
+    ],
+    content: <JewelIntelligence />
   },
 ];
