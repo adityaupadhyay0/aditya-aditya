@@ -22,7 +22,7 @@ export interface CaseStudy {
 export const caseStudiesData: CaseStudy[] = [
   {
     id: 'ai-confluence',
-    category: 'Essay · AI & Design',
+    category: 'Essay - AI & Design',
     title: 'The Cart That Understood Her',
     description:
       'A story about the quiet revolution happening at the intersection of artificial intelligence and the online shopping experience.',
@@ -34,7 +34,7 @@ export const caseStudiesData: CaseStudy[] = [
   },
   {
     id: 'luxury-clienting',
-    category: 'Strategy · Architecture',
+    category: 'Strategy - Architecture',
     title: 'The Architecture of Luxury Clienting',
     description:
       'A deep dive into the six layers of modern luxury commerce: Persona, Branding, Presence, Insights, Authority, and UX.',
@@ -46,19 +46,19 @@ export const caseStudiesData: CaseStudy[] = [
   },
   {
     id: 'market-place',
-    category: 'Strategy · Marketplace & Retail',
+    category: 'Strategy - Marketplace & Retail',
     title: 'The Marketplace & The Retailer',
     description:
       'A deep dive into how clienting transforms transactions into lasting relationships across both mass-market and boutique scales.',
     metrics: [
-      { metric: 'Returns', value: '↓ 30%' },
-      { metric: 'LTV Increase', value: '4.2×' },
+      { metric: 'Returns', value: '-30%' },
+      { metric: 'LTV Increase', value: '4.2x' },
     ],
     content: <MarketPlaceCaseStudy />
   },
   {
     id: 'living-machine',
-    category: 'Visualized · Systems',
+    category: 'Visualized - Systems',
     title: 'The Living Machine',
     description:
       'A cinematic visualization of distributed systems. Explore how machines agree, fail, and scale in the digital void.',
@@ -70,36 +70,36 @@ export const caseStudiesData: CaseStudy[] = [
   },
   {
     id: 'dtc',
-    category: 'Case Study · DTC',
-    title: 'HexaDON × Direct-to-Consumer',
+    category: 'Case Study - DTC',
+    title: 'HexaDON x Direct-to-Consumer',
     description:
       'A deep dive into how HexaDON principles transformed a fine fragrance brand into an experience of desire.',
     metrics: [
-      { metric: 'Cart Abandonment', value: '↓ 42%' },
-      { metric: 'LTV', value: '↑ 2.8×' },
+      { metric: 'Cart Abandonment', value: '-42%' },
+      { metric: 'LTV', value: '+2.8x' },
     ],
     content: <DTCCaseStudy />
   },
   {
     id: 'jewel-intelligence',
-    category: 'Case Study · Jewellery',
+    category: 'Case Study - Jewellery',
     title: 'Jewel Intelligence',
     description:
-      'Moving the trust of fine jewellery stores into a system — without making it feel like one.',
+      'Moving the trust of fine jewellery stores into a system - without making it feel like one.',
     metrics: [
-      { metric: 'Lifetime Spend', value: '↑ 24%' },
+      { metric: 'Lifetime Spend', value: '+24%' },
       { metric: 'Trust', value: 'Absolute' },
     ],
     content: <JewelIntelligence />
   },
   {
     id: 'kavya',
-    category: 'Case Study · Enterprise',
+    category: 'Case Study - Enterprise',
     title: 'Kavya: The Operating Surface',
     description:
       'Unifying the enterprise stack into a single, coherent surface for work, knowledge, and decisions.',
     metrics: [
-      { metric: 'Wait Time', value: '↓ 98%' },
+      { metric: 'Wait Time', value: '-98%' },
       { metric: 'Alignment', value: 'Absolute' },
     ],
     content: <KavyaCaseStudy />

@@ -20,17 +20,19 @@ export default function TabExplosion() {
   ];
 
   useEffect(() => {
+    let active = true;
+    let currentTabs: string[] = [];
     const timer = setInterval(() => {
-      setTabs(prev => {
-        if (prev.length < allTabs.length) {
-          return [...prev, allTabs[prev.length]];
-        }
+      if (!active) return;
+      if (currentTabs.length < allTabs.length) {
+        currentTabs = [...currentTabs, allTabs[currentTabs.length]];
+        setTabs(currentTabs);
+      } else {
         clearInterval(timer);
-        return prev;
-      });
+      }
     }, 1200);
-    return () => clearInterval(timer);
-  }, []);
+    return () => { active = false; clearInterval(timer); };
+  }, [allTabs.length]);
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-[#FAFAF7]">
