@@ -5,6 +5,7 @@ import MarketPlaceCaseStudy from '../case-studies/market-place';
 import LivingMachine from '../case-studies/living-machine';
 import DTCCaseStudy from '../case-studies/dtc';
 import JewelIntelligence from '../case-studies/jewel-intelligence';
+import KavyaCaseStudy from '../case-studies/kavya';
 
 export interface CaseStudy {
   id: string;
@@ -90,5 +91,17 @@ export const caseStudiesData: CaseStudy[] = [
       { metric: 'Trust', value: 'Absolute' },
     ],
     content: <JewelIntelligence />
+  },
+  {
+    id: 'kavya',
+    category: 'Case Study · Enterprise',
+    title: 'Kavya: The Operating Surface',
+    description:
+      'Unifying the enterprise stack into a single, coherent surface for work, knowledge, and decisions.',
+    metrics: [
+      { metric: 'Wait Time', value: '↓ 98%' },
+      { metric: 'Alignment', value: 'Absolute' },
+    ],
+    content: <KavyaCaseStudy />
   },
 ];
