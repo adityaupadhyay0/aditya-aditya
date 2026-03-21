@@ -93,9 +93,18 @@ export default function SceneTruth() {
                  {scores.map((score, i) => (
                     <div
                       key={i}
-                      className="group relative cursor-default"
+                      role="button"
+                      tabIndex={0}
+                      className="group relative cursor-default outline-none focus:bg-[var(--gold-dim)]"
                       onMouseEnter={() => setHoveredScore(score)}
                       onMouseLeave={() => setHoveredScore(null)}
+                      onFocus={() => setHoveredScore(score)}
+                      onBlur={() => setHoveredScore(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setHoveredScore(hoveredScore === score ? null : score);
+                        }
+                      }}
                     >
                        <div className="flex justify-between items-center py-4 border-b border-white/5 group-hover:bg-[var(--gold-dim)] transition-all px-4 -mx-4 rounded">
                          <span className="text-[var(--muted)] font-sans text-xs uppercase tracking-widest">{score.label}</span>

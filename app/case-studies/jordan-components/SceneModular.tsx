@@ -100,6 +100,8 @@ function ModuleCard({ module, delay }: { module: any, delay: number }) {
       viewport={{ once: true }}
       transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -4, borderColor: 'var(--gold)' }}
+      role="article"
+      aria-label={module.name}
       className="bg-[var(--black-3)] border border-[var(--glass-border)] p-10 rounded-lg relative overflow-hidden group cursor-pointer transition-all duration-300"
     >
        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 100%, var(--gold-dim), transparent)' }} />
