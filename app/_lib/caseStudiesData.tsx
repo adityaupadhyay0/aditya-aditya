@@ -6,6 +6,7 @@ import LivingMachine from '../case-studies/living-machine';
 import DTCCaseStudy from '../case-studies/dtc';
 import JewelIntelligence from '../case-studies/jewel-intelligence';
 import KavyaCaseStudy from '../case-studies/kavya';
+import JordanCaseStudy from '../case-studies/jordan';
 
 export interface CaseStudy {
   id: string;
@@ -103,5 +104,17 @@ export const caseStudiesData: CaseStudy[] = [
       { metric: 'Alignment', value: 'Absolute' },
     ],
     content: <KavyaCaseStudy />
+  },
+  {
+    id: 'jordan',
+    category: 'Case Study · Revenue Intelligence',
+    title: 'Jordan: The Complete Sales Platform',
+    description:
+      'A name, not an acronym. The closest thing a revenue team will ever have to a brilliant, trusted colleague.',
+    metrics: [
+      { metric: 'Replaces', value: '8–12 Tools' },
+      { metric: 'First Value', value: '14 Days' },
+    ],
+    content: <JordanCaseStudy />
   },
 ];
